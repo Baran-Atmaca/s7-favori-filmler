@@ -1,5 +1,10 @@
+import { useState } from "react";
+import { Switch, Route } from "react-router-dom";
 import "./App.css";
 import SavedList from "./components/SavedList";
+import {movies} from "./movies.js";
+import MovieDetails from "./components/MovieDetails.jsx";
+import MoviesList from "./components/MoviesList.jsx";
 // movies arrayini movies.js dosyasından import et
 
 function App() {
@@ -9,6 +14,8 @@ function App() {
     - kaydedilmiş filmler için tanımladığın state'in başlangıç değeri boş array olsun. 
     - bunu SavedList componentına prop olarak gönder.
   */
+  const [filmListesi, setFilmListesi] = useState(movies);
+  const [savedFilm, setSavedFilm] = useState([]);
 
   const handleSave = (movie) => {
     /*
@@ -16,6 +23,11 @@ function App() {
       - aynı filmi 2. kez eklememeli.
       - bu fonksiyonu "Kaydet" butonunun olduğu componente prop olarak gönder.
     */
+    if (savedFilm.find((item) => item.id === movie.id)) {
+      return;
+  } else {
+      setSavedFilm([...savedFilm, movie]);
+  }
   };
 
   return (
@@ -29,11 +41,16 @@ function App() {
             - Bu route `MovieDetails` componentini görüntüleyecek.
         */}
 
-        <div className="movies box">
-          <em>Üstteki görevleri tamamladığında bu divi sil</em>
-        </div>
+        <Switch>
+          <Route exact path="/">
+              <MoviesList movies={filmListesi}/>
+          </Route>
+          <Route path="/filmler/:id">
+                <MovieDetails onSave={handleSave}/>
+          </Route>
+        </Switch>
 
-        <SavedList savedList={[]} />
+        <SavedList savedList={savedFilm}/>
       </div>
     </div>
   );
