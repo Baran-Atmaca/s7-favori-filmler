@@ -1,3 +1,5 @@
+import { movies } from "../movies.js";
+import { useParams, useHistory } from "react-router-dom";
 // movies arrayini movies.js dosyasından import et
 
 export default function MovieDetails(props) {
@@ -6,8 +8,10 @@ export default function MovieDetails(props) {
     - URL'deki id'yi params'dan al (ipucu: react-router-dom@5 dokümantasyonuna bakabilirsin.)
     - movies arrayinde o id ye sahip elemanı alttaki movie değişkenine eşitle
   */
+  const { id } = useParams();
+  const history = useHistory();
 
-  const movie = null;
+  const movie = movies.find((item) => item.id === Number(id));
 
   if (!movie) {
     return (
@@ -15,7 +19,7 @@ export default function MovieDetails(props) {
         <h2>Film bilgisi bulunamadı.</h2>
         <div className="movie-footer">
           {/* Geri dön butonuna tıklandığında bir önceki sayfaya gönder */}
-          <button>Geri dön</button>
+          <button onClick={() => history.goBack()}>Geri dön</button>
         </div>
       </div>
     );
@@ -40,9 +44,9 @@ export default function MovieDetails(props) {
       </div>
       <div className="movie-footer">
         {/* Geri dön butonuna tıklandığında bir önceki sayfaya gönder */}
-        <button data-testid="goBackBtn">Geri dön</button>
+        <button data-testid="goBackBtn" onClick={() => history.goBack()}>Geri dön</button>
         {/* kaydet butonuna tıklandığında bu filmi kaydedilenler filmler state'ine ekle */}
-        <button>Kaydet</button>
+        <button onClick={() => onSave(movie)}>Kaydet</button>
       </div>
     </div>
   );
